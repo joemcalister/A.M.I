@@ -18,6 +18,17 @@
  along with Cinder-Warping.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
+/*
+ 
+ IDEA - as audio sounds choppy if generated seperately,
+ generate them seperately, get time for them, generate script,
+ then generate an entire audio file which is simply played, this would be so much more reliable!
+ 
+ */
+
+
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
@@ -95,7 +106,7 @@ void ami_proto_2App::setup()
 
 	// load test image
 	try {
-		mImage = gl::Texture::create( loadImage( loadAsset( "help.png" ) ), 
+		mImage = gl::Texture::create( loadImage( loadAsset( "brain-stensil.png" ) ),
 									  gl::Texture2d::Format().loadTopDown().mipmap( true ).minFilter( GL_LINEAR_MIPMAP_LINEAR ) );
 
 		mSrcArea = mImage->getBounds();
@@ -142,8 +153,6 @@ void ami_proto_2App::update()
             
             if (main_script.current_line->sound_src.length() != 0)
             {
-                // ISSUE -- NEEDS TO BE LOCAL :O
-                
                 audio::SourceFileRef sourceFile = audio::load(loadFile(main_script.current_line->sound_src));
                 mainSound = audio::Voice::create( sourceFile );
                 mainSound->start();
@@ -178,6 +187,13 @@ void ami_proto_2App::update()
                                                                           gl::Texture2d::Format().loadTopDown().mipmap( true ).minFilter( GL_LINEAR_MIPMAP_LINEAR ) );
                 }
                 
+                if (main_script.current_line->sound_src.length() != 0)
+                {
+                    audio::SourceFileRef sourceFile = audio::load(loadFile(main_script.current_line->sound_src));
+                    mainSound = audio::Voice::create( sourceFile );
+                    mainSound->start();
+                }
+                
                 cout << "New Line: " << main_script.current_line->raw_text << endl;
             }
         }
@@ -198,15 +214,19 @@ void ami_proto_2App::draw()
 				// a) issue your draw commands between begin() and end() statements
 				warp->begin();
 
+                
+                // if this current line has an image do it :D -- easy!
+                if (main_script.current_line->image != nil)
+                {
+                    gl::draw( main_script.current_line->image, main_script.current_line->image->getBounds(), warp->getBounds() );
+                }
+                
+                
 				// in this demo, we want to draw a specific area of our image,
 				// but if you want to draw the whole image, you can simply use: gl::draw( mImage );
 				gl::draw( mImage, mSrcArea, warp->getBounds() );
 
-                // if this current line has an image do it :D -- easy!
-                if (main_script.current_line->image != nil)
-                {
-                    gl::draw( main_script.current_line->image, mSrcArea, warp->getBounds() );
-                }
+                
                 
 				warp->end();
 			}
