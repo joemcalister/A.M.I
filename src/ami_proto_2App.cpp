@@ -24,8 +24,11 @@
 #include "cinder/gl/Texture.h"
 #include "cinder/ImageIo.h"
 #include "cinder/Rand.h"
+#include "cinder/audio/Voice.h"
 
 #include "Warp.h"
+#include "script.hpp"
+
 
 using namespace ci;
 using namespace ci::app;
@@ -52,6 +55,8 @@ public:
 	void keyUp( KeyEvent event ) override;
 
 	void updateWindowTitle();
+    
+    script main_script;
 private:
 	bool			mUseBeginEnd;
 
@@ -61,6 +66,7 @@ private:
 	WarpList		mWarps;
 
 	Area			mSrcArea;
+    audio::VoiceRef mainSound;
 };
 
 void ami_proto_2App::prepare( Settings *settings )
@@ -70,7 +76,7 @@ void ami_proto_2App::prepare( Settings *settings )
 
 void ami_proto_2App::setup()
 {
-	mUseBeginEnd = false;
+	mUseBeginEnd = true;
 	updateWindowTitle();
 	disableFrameRate();
 
@@ -111,6 +117,71 @@ void ami_proto_2App::cleanup()
 void ami_proto_2App::update()
 {
 	// there is nothing to update
+    
+    if (main_script.ready)
+    {
+        // elapse the time
+        if (main_script.begun == false)
+        {
+            main_script.start_time = ci::app::getElapsedSeconds();
+            main_script.begun = true;
+            main_script.current_line = &main_script.lines[0];
+            
+            // note the first line
+            cout << "We are starting the show!" << endl;
+            cout << "First Line: " << main_script.current_line->raw_text << endl;
+            
+            // check for the image
+            if (main_script.current_line->image == nil && main_script.current_line->image_src.length() != 0)
+            {
+                // we need to load in an image
+                cout << "Loading in an Image!" << endl;
+                main_script.current_line->image = gl::Texture::create( loadImage( loadUrl( main_script.current_line->image_src ) ),
+                                             gl::Texture2d::Format().loadTopDown().mipmap( true ).minFilter( GL_LINEAR_MIPMAP_LINEAR ) );
+            }
+            
+            if (main_script.current_line->sound_src.length() != 0)
+            {
+                // ISSUE -- NEEDS TO BE LOCAL :O
+                
+                audio::SourceFileRef sourceFile = audio::load(loadFile(main_script.current_line->sound_src));
+                mainSound = audio::Voice::create( sourceFile );
+                mainSound->start();
+            }
+            
+        }else {
+            main_script.current_time = ci::app::getElapsedSeconds() - main_script.start_time;
+            //cout << "current time =" << main_script.current_time << endl;
+        }
+        
+        
+        // determine if should proceed to next timeline chunk
+        if (main_script.current_line->end_time < main_script.current_time)
+        {
+            // we need to move on
+            if (main_script.current_index >= (main_script.lines.size()-1))
+            {
+                // we've hit the end
+                cout << "\nThe end of the show!" << endl;
+                main_script.ready = false;
+            }else {
+                cout << endl;
+                main_script.current_index++;
+                main_script.current_line = &main_script.lines[main_script.current_index];
+                
+                // load in the potential image
+                if (main_script.current_line->image == nil && main_script.current_line->image_src.length() != 0)
+                {
+                    // we need to load in an image
+                    cout << "Loading in an Image" << endl;
+                    main_script.current_line->image = gl::Texture::create( loadImage( loadUrl( main_script.current_line->image_src ) ),
+                                                                          gl::Texture2d::Format().loadTopDown().mipmap( true ).minFilter( GL_LINEAR_MIPMAP_LINEAR ) );
+                }
+                
+                cout << "New Line: " << main_script.current_line->raw_text << endl;
+            }
+        }
+    }
 }
 
 void ami_proto_2App::draw()
@@ -131,6 +202,12 @@ void ami_proto_2App::draw()
 				// but if you want to draw the whole image, you can simply use: gl::draw( mImage );
 				gl::draw( mImage, mSrcArea, warp->getBounds() );
 
+                // if this current line has an image do it :D -- easy!
+                if (main_script.current_line->image != nil)
+                {
+                    gl::draw( main_script.current_line->image, mSrcArea, warp->getBounds() );
+                }
+                
 				warp->end();
 			}
 			else {
@@ -235,10 +312,7 @@ void ami_proto_2App::keyUp( KeyEvent event )
 
 void ami_proto_2App::updateWindowTitle()
 {
-	if( mUseBeginEnd )
-		getWindow()->setTitle( "Warping Sample - Using begin() and end()" );
-	else
-		getWindow()->setTitle( "Warping Sample - Using draw()" );
+	getWindow()->setTitle( "A.M.I Prototype v2" );
 }
 
 CINDER_APP( ami_proto_2App, RendererGl( RendererGl::Options().msaa( 8 ) ), &ami_proto_2App::prepare )

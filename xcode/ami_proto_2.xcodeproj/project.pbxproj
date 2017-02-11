@@ -16,17 +16,17 @@
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
 		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
 		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
-		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
-		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		C57F0BEE84BC4CDEB9901483 /* WarpPerspectiveBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FADD43C2E6485D89C3842D /* WarpPerspectiveBilinear.cpp */; };
 		0E9CBB5A093742CAA87460FF /* WarpPerspective.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 118C6EE5BE9941AEBC9D9284 /* WarpPerspective.cpp */; };
-		6D63A06F6DB24AB18DFB2789 /* WarpBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB61C3AC6344988A296D8F /* WarpBilinear.cpp */; };
 		2114F783B791421BAF263FCE /* Warp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0407881A77DE4CAD948EA496 /* Warp.cpp */; };
-		3D73FA8D573E403B9CF7DCAC /* Warp.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BA7DDD9A51E4347BBD06F1B /* Warp.h */; };
-		A8FC23C20C1A4CE7AF12BE8B /* ami_proto_2App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F19F187A4B024EE49F99329A /* ami_proto_2App.cpp */; };
-		19F24DC41EA24C9CBA4D9CCE /* ami_proto_2_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = F21F639DF7AB438B86420EAF /* ami_proto_2_Prefix.pch */; };
+		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5D801B40AE3D4384A06CFC82 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9753D38F05F44B63896082A1 /* CinderApp.icns */; };
-		5EF820F4A4204352B431A1FA /* Resources.h in Headers */ = {isa = PBXBuildFile; fileRef = CDDDAD5873B0455BBB506707 /* Resources.h */; };
+		6D63A06F6DB24AB18DFB2789 /* WarpBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB61C3AC6344988A296D8F /* WarpBilinear.cpp */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A8FC23C20C1A4CE7AF12BE8B /* ami_proto_2App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F19F187A4B024EE49F99329A /* ami_proto_2App.cpp */; };
+		C57F0BEE84BC4CDEB9901483 /* WarpPerspectiveBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FADD43C2E6485D89C3842D /* WarpPerspectiveBilinear.cpp */; };
+		D82288991E4F5D2A008B11F7 /* script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82288971E4F5D2A008B11F7 /* script.cpp */; };
+		D822889D1E4F5F27008B11F7 /* script_object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D822889B1E4F5F27008B11F7 /* script_object.cpp */; };
+		D8AC040B1E4F563300E46D08 /* networking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8AC04091E4F563300E46D08 /* networking.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,21 +39,28 @@
 		00B784B20FF439BC000DE1D7 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		00B995581B128DF400A5C623 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		00B995591B128DF400A5C623 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
+		0407881A77DE4CAD948EA496 /* Warp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = Warp.cpp; path = "../blocks/Cinder-Warping/src/Warp.cpp"; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		118C6EE5BE9941AEBC9D9284 /* WarpPerspective.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = WarpPerspective.cpp; path = "../blocks/Cinder-Warping/src/WarpPerspective.cpp"; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		4BA7DDD9A51E4347BBD06F1B /* Warp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Warp.h; path = "../blocks/Cinder-Warping/include/Warp.h"; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
+		72FADD43C2E6485D89C3842D /* WarpPerspectiveBilinear.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = WarpPerspectiveBilinear.cpp; path = "../blocks/Cinder-Warping/src/WarpPerspectiveBilinear.cpp"; sourceTree = "<group>"; };
+		7EBB61C3AC6344988A296D8F /* WarpBilinear.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = WarpBilinear.cpp; path = "../blocks/Cinder-Warping/src/WarpBilinear.cpp"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* ami_proto_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ami_proto_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CDDDAD5873B0455BBB506707 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ../include/Resources.h; sourceTree = "<group>"; name = Resources.h; };
-		9753D38F05F44B63896082A1 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; name = CinderApp.icns; };
-		F1EFE94F6B8C493D830FDC09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; name = Info.plist; };
-		F21F639DF7AB438B86420EAF /* ami_proto_2_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = ami_proto_2_Prefix.pch; sourceTree = "<group>"; name = ami_proto_2_Prefix.pch; };
-		F19F187A4B024EE49F99329A /* ami_proto_2App.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = ../src/ami_proto_2App.cpp; sourceTree = "<group>"; name = ami_proto_2App.cpp; };
-		4BA7DDD9A51E4347BBD06F1B /* Warp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "../blocks/Cinder-Warping/include/Warp.h"; sourceTree = "<group>"; name = Warp.h; };
-		0407881A77DE4CAD948EA496 /* Warp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = "../blocks/Cinder-Warping/src/Warp.cpp"; sourceTree = "<group>"; name = Warp.cpp; };
-		7EBB61C3AC6344988A296D8F /* WarpBilinear.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = "../blocks/Cinder-Warping/src/WarpBilinear.cpp"; sourceTree = "<group>"; name = WarpBilinear.cpp; };
-		118C6EE5BE9941AEBC9D9284 /* WarpPerspective.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = "../blocks/Cinder-Warping/src/WarpPerspective.cpp"; sourceTree = "<group>"; name = WarpPerspective.cpp; };
-		72FADD43C2E6485D89C3842D /* WarpPerspectiveBilinear.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; path = "../blocks/Cinder-Warping/src/WarpPerspectiveBilinear.cpp"; sourceTree = "<group>"; name = WarpPerspectiveBilinear.cpp; };
+		9753D38F05F44B63896082A1 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		CDDDAD5873B0455BBB506707 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		D82288971E4F5D2A008B11F7 /* script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = script.cpp; sourceTree = "<group>"; };
+		D82288981E4F5D2A008B11F7 /* script.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = script.hpp; sourceTree = "<group>"; };
+		D822889B1E4F5F27008B11F7 /* script_object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = script_object.cpp; sourceTree = "<group>"; };
+		D822889C1E4F5F27008B11F7 /* script_object.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = script_object.hpp; sourceTree = "<group>"; };
+		D8AC04091E4F563300E46D08 /* networking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = networking.cpp; sourceTree = "<group>"; };
+		D8AC040A1E4F563300E46D08 /* networking.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = networking.hpp; sourceTree = "<group>"; };
+		D8AC040D1E4F596300E46D08 /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
+		F19F187A4B024EE49F99329A /* ami_proto_2App.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ami_proto_2App.cpp; path = ../src/ami_proto_2App.cpp; sourceTree = "<group>"; };
+		F1EFE94F6B8C493D830FDC09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F21F639DF7AB438B86420EAF /* ami_proto_2_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = ami_proto_2_Prefix.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,10 +85,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01B97315FEAEA392516A2CEA /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				A1D55C72BB3F4BBE92FF031D /* Cinder-Warping */,
+			);
+			name = Blocks;
+			sourceTree = "<group>";
+		};
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
 				F19F187A4B024EE49F99329A /* ami_proto_2App.cpp */,
+				D822889A1E4F5F0F008B11F7 /* script_object */,
+				D82288961E4F5D1D008B11F7 /* script */,
+				D82288951E4F5D10008B11F7 /* networking */,
+				D8AC040D1E4F596300E46D08 /* json.hpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -134,42 +153,6 @@
 			name = ami_proto_2;
 			sourceTree = "<group>";
 		};
-		D3147F797E0C4A40A0A0A923 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				4BA7DDD9A51E4347BBD06F1B /* Warp.h */,
-			);
-			name = include;
-			sourceTree = "<group>";
-		};
-		67EC6552E8584328AEB824B8 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				0407881A77DE4CAD948EA496 /* Warp.cpp */,
-				7EBB61C3AC6344988A296D8F /* WarpBilinear.cpp */,
-				118C6EE5BE9941AEBC9D9284 /* WarpPerspective.cpp */,
-				72FADD43C2E6485D89C3842D /* WarpPerspectiveBilinear.cpp */,
-			);
-			name = src;
-			sourceTree = "<group>";
-		};
-		A1D55C72BB3F4BBE92FF031D /* Cinder-Warping */ = {
-			isa = PBXGroup;
-			children = (
-				D3147F797E0C4A40A0A0A923 /* include */,
-				67EC6552E8584328AEB824B8 /* src */,
-			);
-			name = "Cinder-Warping";
-			sourceTree = "<group>";
-		};
-		01B97315FEAEA392516A2CEA /* Blocks */ = {
-			isa = PBXGroup;
-			children = (
-				A1D55C72BB3F4BBE92FF031D /* Cinder-Warping */,
-			);
-			name = Blocks;
-			sourceTree = "<group>";
-		};
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -195,6 +178,61 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		67EC6552E8584328AEB824B8 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				0407881A77DE4CAD948EA496 /* Warp.cpp */,
+				7EBB61C3AC6344988A296D8F /* WarpBilinear.cpp */,
+				118C6EE5BE9941AEBC9D9284 /* WarpPerspective.cpp */,
+				72FADD43C2E6485D89C3842D /* WarpPerspectiveBilinear.cpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		A1D55C72BB3F4BBE92FF031D /* Cinder-Warping */ = {
+			isa = PBXGroup;
+			children = (
+				D3147F797E0C4A40A0A0A923 /* include */,
+				67EC6552E8584328AEB824B8 /* src */,
+			);
+			name = "Cinder-Warping";
+			sourceTree = "<group>";
+		};
+		D3147F797E0C4A40A0A0A923 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				4BA7DDD9A51E4347BBD06F1B /* Warp.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		D82288951E4F5D10008B11F7 /* networking */ = {
+			isa = PBXGroup;
+			children = (
+				D8AC040A1E4F563300E46D08 /* networking.hpp */,
+				D8AC04091E4F563300E46D08 /* networking.cpp */,
+			);
+			name = networking;
+			sourceTree = "<group>";
+		};
+		D82288961E4F5D1D008B11F7 /* script */ = {
+			isa = PBXGroup;
+			children = (
+				D82288981E4F5D2A008B11F7 /* script.hpp */,
+				D82288971E4F5D2A008B11F7 /* script.cpp */,
+			);
+			name = script;
+			sourceTree = "<group>";
+		};
+		D822889A1E4F5F0F008B11F7 /* script_object */ = {
+			isa = PBXGroup;
+			children = (
+				D822889C1E4F5F27008B11F7 /* script_object.hpp */,
+				D822889B1E4F5F27008B11F7 /* script_object.cpp */,
+			);
+			name = script_object;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,6 +261,8 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "ami_proto_2" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -258,11 +298,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D82288991E4F5D2A008B11F7 /* script.cpp in Sources */,
 				A8FC23C20C1A4CE7AF12BE8B /* ami_proto_2App.cpp in Sources */,
 				2114F783B791421BAF263FCE /* Warp.cpp in Sources */,
 				6D63A06F6DB24AB18DFB2789 /* WarpBilinear.cpp in Sources */,
 				0E9CBB5A093742CAA87460FF /* WarpPerspective.cpp in Sources */,
+				D822889D1E4F5F27008B11F7 /* script_object.cpp in Sources */,
 				C57F0BEE84BC4CDEB9901483 /* WarpPerspectiveBilinear.cpp in Sources */,
+				D8AC040B1E4F563300E46D08 /* networking.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,21 +316,24 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ami_proto_2_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = ami_proto_2_Prefix.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
+				OTHER_LDFLAGS = (
+					"\"$(CINDER_PATH)/lib/libcinder_d.a\"",
+					"-lcurl",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.libcinder.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = ami_proto_2;
 				SYMROOT = ./build;
@@ -305,12 +351,12 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ami_proto_2_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
 					"$(inherited)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = ami_proto_2_Prefix.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -327,7 +373,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CINDER_PATH = "../../../Documents/cinder_0.9.0_mac";
+				CINDER_PATH = ../../../Documents/cinder_0.9.0_mac;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				CLANG_CXX_LIBRARY = "libc++";
 				ENABLE_TESTABILITY = YES;
@@ -337,10 +383,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = (
-					"\"$(CINDER_PATH)/include\" ../include",
-					"\"../blocks/Cinder-Warping/include\"",
-				);
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include \"../blocks/Cinder-Warping/include\"";
 			};
 			name = Debug;
 		};
@@ -348,7 +391,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CINDER_PATH = "../../../Documents/cinder_0.9.0_mac";
+				CINDER_PATH = ../../../Documents/cinder_0.9.0_mac;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -356,10 +399,7 @@
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = (
-					"\"$(CINDER_PATH)/include\" ../include",
-					"\"../blocks/Cinder-Warping/include\"",
-				);
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include \"../blocks/Cinder-Warping/include\"";
 			};
 			name = Release;
 		};

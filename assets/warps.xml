@@ -3,12 +3,17 @@
 	<profile name="default">
 		<map id="1" display="1">
 			<warp method="bilinear" width="3" height="2" brightness="1" resolution="64" linear="1" adaptive="0">
-				<controlpoint x="0.550260425" y="0.574630439"/>
-				<controlpoint x="0.534375012" y="0.909871221"/>
+				<controlpoint x="0.450694442" y="0.583524048"/>
+				<controlpoint x="0.470833331" y="0.752860427"/>
 				<controlpoint x="0.711197913" y="0.439675719"/>
 				<controlpoint x="0.705729187" y="0.990939438"/>
-				<controlpoint x="0.90234375" y="0.477825463"/>
+				<controlpoint x="0.822916687" y="0.637299776"/>
 				<controlpoint x="0.918229163" y="0.916547477"/>
+				<blend exponent="2">
+					<edges left="0" top="0" right="0" bottom="0"/>
+					<gamma red="1" green="1" blue="1"/>
+					<luminance red="0.5" green="0.5" blue="0.5"/>
+				</blend>
 			</warp>
 		</map>
 		<map id="2" display="1">
@@ -17,6 +22,11 @@
 				<controlpoint x="0.328125" y="0.159752026"/>
 				<controlpoint x="0.419731468" y="0.902727246"/>
 				<controlpoint x="0.0297723301" y="0.924545467"/>
+				<blend exponent="2">
+					<edges left="0" top="0" right="0" bottom="0"/>
+					<gamma red="1" green="1" blue="1"/>
+					<luminance red="0.5" green="0.5" blue="0.5"/>
+				</blend>
 			</warp>
 		</map>
 		<map id="3" display="1">
@@ -37,6 +47,11 @@
 				<controlpoint x="1.07964885" y="0.331701636"/>
 				<controlpoint x="1.06867218" y="0.669165134"/>
 				<controlpoint x="1" y="1"/>
+				<blend exponent="2">
+					<edges left="0" top="0" right="0" bottom="0"/>
+					<gamma red="1" green="1" blue="1"/>
+					<luminance red="0.5" green="0.5" blue="0.5"/>
+				</blend>
 				<corner x="0.367968738" y="0.062470194"/>
 				<corner x="0.941666663" y="0.0534096323"/>
 				<corner x="0.919791639" y="0.454458743"/>
