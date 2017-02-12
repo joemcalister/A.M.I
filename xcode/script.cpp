@@ -34,6 +34,25 @@ script::script()
             s.image = nil;
             s.image_src = dict["resource"];
             
+            // download the image locally
+            if (dict["resource"] != "")
+            {
+                // save the image locally
+                string url = dict["resource"];
+                
+                // create the random filepath
+                std::ostringstream oss;
+                oss << BUFFER_FILES_PATH << random() << "-image.jpg";
+                std::string var = oss.str();
+                
+                cinder::BufferRef myData = loadStreamBuffer(cinder::loadUrlStream(url));
+                myData->write(cinder::writeFile(oss.str()));
+                
+                #warning maybe a memory leak here ^
+                s.image_src = oss.str();
+                s.image = cinder::gl::Texture::create(loadImage(cinder::loadFile(s.image_src)), cinder::gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
+            }
+            
             // fix the sound by downloading it locally
             if (dict["voice"] != "")
             {
@@ -42,7 +61,7 @@ script::script()
                 
                 // create the random filepath
                 std::ostringstream oss;
-                oss << "/Users/joe/Desktop/ami_sound_files/" << random() << "-speech.wav";
+                oss << BUFFER_FILES_PATH << random() << "-speech.wav";
                 std::string var = oss.str();
                 
                 cinder::BufferRef myData = loadStreamBuffer(cinder::loadUrlStream(url));

@@ -18,7 +18,7 @@ class script_object
 public:
     string raw_text, image_src, sound_src;
     float end_time;
-    cinder::gl::TextureRef	image;
+    cinder::gl::TextureRef image;
 };
 
 #endif /* script_object_hpp */

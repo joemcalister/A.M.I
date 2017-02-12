@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "networking.hpp"
 #include "script_object.hpp"
+#include "Resources.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -26,7 +27,7 @@ public:
     bool ready, begun;
     float start_time, current_time;
     int current_index;
-    script_object* current_line;
+    script_object current_line;
 private:
     networking network;
 };

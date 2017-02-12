@@ -1,23 +1,10 @@
-/*
- Copyright (c) 2010-2015, Paul Houx - All rights reserved.
- This code is intended for use with the Cinder C++ library: http://libcinder.org
-
- This file is part of Cinder-Warping.
-
- Cinder-Warping is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- Cinder-Warping is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with Cinder-Warping.  If not, see <http://www.gnu.org/licenses/>.
- */
-
+//
+//  ami_proto_2App.cpp
+//  ami_proto_2
+//
+//  Created by Joe on 11/02/2017.
+//
+//
 
 
 /*
@@ -25,6 +12,9 @@
  IDEA - as audio sounds choppy if generated seperately,
  generate them seperately, get time for them, generate script,
  then generate an entire audio file which is simply played, this would be so much more reliable!
+ 
+ fft based visulisation across brains linked to her voice, something like this
+ https://christianfloisand.wordpress.com/tag/cinder/
  
  */
 
@@ -38,7 +28,8 @@
 #include "cinder/audio/Voice.h"
 
 #include "Warp.h"
-#include "script.hpp"
+#include "portaudio.h"
+#include "queue.hpp"
 
 
 using namespace ci;
@@ -48,73 +39,69 @@ using namespace std;
 
 class ami_proto_2App : public App {
 public:
-	static void prepare( Settings *settings );
+	static void prepare(Settings *settings);
 
 	void setup() override;
 	void cleanup() override;
 	void update() override;
 	void draw() override;
-
 	void resize() override;
 
-	void mouseMove( MouseEvent event ) override;
-	void mouseDown( MouseEvent event ) override;
-	void mouseDrag( MouseEvent event ) override;
-	void mouseUp( MouseEvent event ) override;
-
-	void keyDown( KeyEvent event ) override;
-	void keyUp( KeyEvent event ) override;
+	void mouseMove(MouseEvent event) override;
+	void mouseDown(MouseEvent event) override;
+	void mouseDrag(MouseEvent event) override;
+	void mouseUp(MouseEvent event) override;
+	void keyDown(KeyEvent event) override;
+	void keyUp(KeyEvent event) override;
 
 	void updateWindowTitle();
-    
-    script main_script;
 private:
-	bool			mUseBeginEnd;
-
-	fs::path		mSettings;
-
-	gl::TextureRef	mImage;
-	WarpList		mWarps;
-
-	Area			mSrcArea;
+	fs::path mSettings;
+	gl::TextureRef stensil, rawbacking;
+	WarpList mWarps;
+	Area mSrcArea;
     audio::VoiceRef mainSound;
+    queue q;
 };
 
-void ami_proto_2App::prepare( Settings *settings )
+void ami_proto_2App::prepare(Settings *settings)
 {
-	settings->setWindowSize( 1440, 900 );
+	settings->setWindowSize(1440, 900);
 }
 
 void ami_proto_2App::setup()
 {
-	mUseBeginEnd = true;
 	updateWindowTitle();
 	disableFrameRate();
 
 	// initialize warps
-	mSettings = getAssetPath( "" ) / "warps.xml";
-	if( fs::exists( mSettings ) ) {
+	mSettings = getAssetPath("") / "warps.xml";
+	if(fs::exists(mSettings)) {
 		// load warp settings from file if one exists
-		mWarps = Warp::readSettings( loadFile( mSettings ) );
+		mWarps = Warp::readSettings(loadFile(mSettings));
 	}
 	else {
 		// otherwise create a warp from scratch
-		mWarps.push_back( WarpBilinear::create() );
-		mWarps.push_back( WarpPerspective::create() );
-		mWarps.push_back( WarpPerspectiveBilinear::create() );
+		mWarps.push_back(WarpBilinear::create());
+		mWarps.push_back(WarpPerspective::create());
+		mWarps.push_back(WarpPerspectiveBilinear::create());
 	}
 
 	// load test image
 	try {
-		mImage = gl::Texture::create( loadImage( loadAsset( "brain-stensil.png" ) ),
-									  gl::Texture2d::Format().loadTopDown().mipmap( true ).minFilter( GL_LINEAR_MIPMAP_LINEAR ) );
+		stensil = gl::Texture::create(loadImage(loadAsset("brain-stensil.png")),
+									  gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
+        
+        rawbacking = gl::Texture::create(loadImage(loadAsset("uvs-calibration.jpeg")),
+                                      gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
+        
 
-		mSrcArea = mImage->getBounds();
+		mSrcArea = stensil->getBounds();
 
 		// adjust the content size of the warps
-		Warp::setSize( mWarps, mImage->getSize() );
+		Warp::setSize(mWarps, stensil->getSize());
 	}
-	catch( const std::exception &e ) {
+	catch(const std::exception &e) {
 		console() << e.what() << std::endl;
 	}
 }
@@ -122,13 +109,79 @@ void ami_proto_2App::setup()
 void ami_proto_2App::cleanup()
 {
 	// save warp settings
-	Warp::writeSettings( mWarps, writeFile( mSettings ) );
+	Warp::writeSettings(mWarps, writeFile(mSettings));
 }
 
 void ami_proto_2App::update()
 {
 	// there is nothing to update
     
+    if (!q.isActive && !q.loading && !q.ready)
+    {
+        // there's no user running, load the next one -- if there is one
+        cout << "Starting to load the next user" << endl;
+        q.loadInNextUser();
+        
+    }else if (!q.isActive && q.ready)
+    {
+        // a user has been pre-loaded in -- start the show
+        cout << "A user script is preloaded for playing.." << endl;
+        
+        // setup defaults
+        q.currentScript.start_time = ci::app::getElapsedSeconds();
+        q.currentScript.begun = true;
+        q.currentScript.current_line = q.currentScript.lines[0];
+        
+        // check the current sound scenario
+        if (q.currentScript.current_line.sound_src.length() != 0)
+        {
+            audio::SourceFileRef sourceFile = audio::load(loadFile(q.currentScript.current_line.sound_src));
+            mainSound = audio::Voice::create(sourceFile);
+            mainSound->start();
+        }
+        
+        // note the start
+        cout << "We are starting the show!" << endl;
+        cout << "First Line: " << q.currentScript.current_line.raw_text << endl;
+        
+        // start the main play
+        q.isActive = true;
+        
+    }else if (q.isActive)
+    {
+        // itterate time
+        q.currentScript.current_time = ci::app::getElapsedSeconds() - q.currentScript.start_time;
+        
+        // determine if should proceed to next timeline chunk
+        if (q.currentScript.current_line.end_time < q.currentScript.current_time)
+        {
+            // we need to move on
+            if (q.currentScript.current_index >= (q.currentScript.lines.size()-1))
+            {
+                // we've hit the end
+                cout << "\nThe end of the show!" << endl;
+                q.endShow();
+                
+            }else {
+                cout << endl;
+                q.currentScript.current_index++;
+                q.currentScript.current_line = q.currentScript.lines[q.currentScript.current_index];
+                
+                // load in the potential image
+                if (q.currentScript.current_line.sound_src.length() != 0)
+                {
+                    audio::SourceFileRef sourceFile = audio::load(loadFile(q.currentScript.current_line.sound_src));
+                    mainSound = audio::Voice::create(sourceFile);
+                    mainSound->start();
+                }
+                
+                cout << "New Line: " << q.currentScript.current_line.raw_text << endl;
+            }
+        }
+    }
+    
+    
+    /*
     if (main_script.ready)
     {
         // elapse the time
@@ -147,15 +200,16 @@ void ami_proto_2App::update()
             {
                 // we need to load in an image
                 cout << "Loading in an Image!" << endl;
-                main_script.current_line->image = gl::Texture::create( loadImage( loadUrl( main_script.current_line->image_src ) ),
-                                             gl::Texture2d::Format().loadTopDown().mipmap( true ).minFilter( GL_LINEAR_MIPMAP_LINEAR ) );
+                main_script.current_line->image = gl::Texture::create(loadImage(loadFile(main_script.current_line->image_src)), gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
             }
             
             if (main_script.current_line->sound_src.length() != 0)
             {
                 audio::SourceFileRef sourceFile = audio::load(loadFile(main_script.current_line->sound_src));
-                mainSound = audio::Voice::create( sourceFile );
+                mainSound = audio::Voice::create(sourceFile);
                 mainSound->start();
+                
+                
             }
             
         }else {
@@ -183,14 +237,13 @@ void ami_proto_2App::update()
                 {
                     // we need to load in an image
                     cout << "Loading in an Image" << endl;
-                    main_script.current_line->image = gl::Texture::create( loadImage( loadUrl( main_script.current_line->image_src ) ),
-                                                                          gl::Texture2d::Format().loadTopDown().mipmap( true ).minFilter( GL_LINEAR_MIPMAP_LINEAR ) );
+                    main_script.current_line->image = gl::Texture::create(loadImage(loadFile(main_script.current_line->image_src)), gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
                 }
                 
                 if (main_script.current_line->sound_src.length() != 0)
                 {
                     audio::SourceFileRef sourceFile = audio::load(loadFile(main_script.current_line->sound_src));
-                    mainSound = audio::Voice::create( sourceFile );
+                    mainSound = audio::Voice::create(sourceFile);
                     mainSound->start();
                 }
                 
@@ -198,45 +251,37 @@ void ami_proto_2App::update()
             }
         }
     }
+     */
 }
 
 void ami_proto_2App::draw()
 {
 	// clear the window and set the drawing color to white
 	gl::clear();
-	gl::color( Color::white() );
+	gl::color(Color::white());
 
-	if( mImage ) {
-		// iterate over the warps and draw their content
-		for( auto &warp : mWarps ) {
-			// there are two ways you can use the warps:
-			if( mUseBeginEnd ) {
-				// a) issue your draw commands between begin() and end() statements
-				warp->begin();
+	if(stensil) {
+		// repeat for all brains
+		for(auto &warp:mWarps) {
+			
+            // begin warp
+            warp->begin();
 
-                
-                // if this current line has an image do it :D -- easy!
-                if (main_script.current_line->image != nil)
-                {
-                    gl::draw( main_script.current_line->image, main_script.current_line->image->getBounds(), warp->getBounds() );
-                }
-                
-                
-				// in this demo, we want to draw a specific area of our image,
-				// but if you want to draw the whole image, you can simply use: gl::draw( mImage );
-				gl::draw( mImage, mSrcArea, warp->getBounds() );
+            // display raw backing
+            gl::draw(rawbacking, rawbacking->getBounds(), warp->getBounds());
+            
+            // if this current line has an image do it :D -- easy!
+            if (q.currentScript.current_line.image != nil)
+            {
+                gl::draw(q.currentScript.current_line.image, q.currentScript.current_line.image->getBounds(), warp->getBounds());
+            }
+            
+            // stretch image to fit the area with warp->get bounds
+            gl::draw(stensil, mSrcArea, warp->getBounds());
 
-                
-                
-				warp->end();
-			}
-			else {
-				// b) simply draw a texture on them (ideal for video)
-
-				// in this demo, we want to draw a specific area of our image,
-				// but if you want to draw the whole image, you can simply use: warp->draw( mImage );
-				warp->draw( mImage, mSrcArea );
-			}
+            // end warp
+            warp->end();
+			
 		}
 	}
 }
@@ -244,95 +289,94 @@ void ami_proto_2App::draw()
 void ami_proto_2App::resize()
 {
 	// tell the warps our window has been resized, so they properly scale up or down
-	Warp::handleResize( mWarps );
+	Warp::handleResize(mWarps);
 }
 
-void ami_proto_2App::mouseMove( MouseEvent event )
+void ami_proto_2App::mouseMove(MouseEvent event)
 {
 	// pass this mouse event to the warp editor first
-	if( !Warp::handleMouseMove( mWarps, event ) ) {
+	if(!Warp::handleMouseMove(mWarps, event)) {
 		// let your application perform its mouseMove handling here
 	}
 }
 
-void ami_proto_2App::mouseDown( MouseEvent event )
+void ami_proto_2App::mouseDown(MouseEvent event)
 {
 	// pass this mouse event to the warp editor first
-	if( !Warp::handleMouseDown( mWarps, event ) ) {
+	if(!Warp::handleMouseDown(mWarps, event)) {
 		// let your application perform its mouseDown handling here
 	}
 }
 
-void ami_proto_2App::mouseDrag( MouseEvent event )
+void ami_proto_2App::mouseDrag(MouseEvent event)
 {
 	// pass this mouse event to the warp editor first
-	if( !Warp::handleMouseDrag( mWarps, event ) ) {
+	if(!Warp::handleMouseDrag(mWarps, event)) {
 		// let your application perform its mouseDrag handling here
 	}
 }
 
-void ami_proto_2App::mouseUp( MouseEvent event )
+void ami_proto_2App::mouseUp(MouseEvent event)
 {
 	// pass this mouse event to the warp editor first
-	if( !Warp::handleMouseUp( mWarps, event ) ) {
+	if(!Warp::handleMouseUp(mWarps, event)) {
 		// let your application perform its mouseUp handling here
 	}
 }
 
-void ami_proto_2App::keyDown( KeyEvent event )
+void ami_proto_2App::keyDown(KeyEvent event)
 {
 	// pass this key event to the warp editor first
-	if( !Warp::handleKeyDown( mWarps, event ) ) {
+	if(!Warp::handleKeyDown(mWarps, event)) {
 		// warp editor did not handle the key, so handle it here
-		switch( event.getCode() ) {
+		switch(event.getCode()) {
 			case KeyEvent::KEY_ESCAPE:
 				// quit the application
 				quit();
 				break;
 			case KeyEvent::KEY_f:
 				// toggle full screen
-				setFullScreen( !isFullScreen() );
+				setFullScreen(!isFullScreen());
 				break;
 			case KeyEvent::KEY_v:
 				// toggle vertical sync
-				gl::enableVerticalSync( !gl::isVerticalSyncEnabled() );
+				gl::enableVerticalSync(!gl::isVerticalSyncEnabled());
 				break;
 			case KeyEvent::KEY_w:
 				// toggle warp edit mode
-				Warp::enableEditMode( !Warp::isEditModeEnabled() );
+				Warp::enableEditMode(!Warp::isEditModeEnabled());
 				break;
 			case KeyEvent::KEY_a:
 				// toggle drawing a random region of the image
-				if( mSrcArea.getWidth() != mImage->getWidth() || mSrcArea.getHeight() != mImage->getHeight() )
-					mSrcArea = mImage->getBounds();
+				if(mSrcArea.getWidth() != stensil->getWidth() || mSrcArea.getHeight() != stensil->getHeight())
+					mSrcArea = stensil->getBounds();
 				else {
-					int x1 = Rand::randInt( 0, mImage->getWidth() - 150 );
-					int y1 = Rand::randInt( 0, mImage->getHeight() - 150 );
-					int x2 = Rand::randInt( x1 + 150, mImage->getWidth() );
-					int y2 = Rand::randInt( y1 + 150, mImage->getHeight() );
-					mSrcArea = Area( x1, y1, x2, y2 );
+					int x1 = Rand::randInt(0, stensil->getWidth() - 150);
+					int y1 = Rand::randInt(0, stensil->getHeight() - 150);
+					int x2 = Rand::randInt(x1 + 150, stensil->getWidth());
+					int y2 = Rand::randInt(y1 + 150, stensil->getHeight());
+					mSrcArea = Area(x1, y1, x2, y2);
 				}
 				break;
 			case KeyEvent::KEY_SPACE:
 				// toggle drawing mode
-				mUseBeginEnd = !mUseBeginEnd;
 				updateWindowTitle();
 				break;
 		}
 	}
 }
 
-void ami_proto_2App::keyUp( KeyEvent event )
+void ami_proto_2App::keyUp(KeyEvent event)
 {
 	// pass this key event to the warp editor first
-	if( !Warp::handleKeyUp( mWarps, event ) ) {
+	if(!Warp::handleKeyUp(mWarps, event)) {
 		// let your application perform its keyUp handling here
 	}
 }
 
 void ami_proto_2App::updateWindowTitle()
 {
-	getWindow()->setTitle( "A.M.I Prototype v2" );
+	getWindow()->setTitle("A.M.I Prototype v2");
 }
 
-CINDER_APP( ami_proto_2App, RendererGl( RendererGl::Options().msaa( 8 ) ), &ami_proto_2App::prepare )
+CINDER_APP(ami_proto_2App, RendererGl(RendererGl::Options().msaa(8)), &ami_proto_2App::prepare)
