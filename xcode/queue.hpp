@@ -18,10 +18,14 @@ public:
     queue();
     void endShow();
     void loadInNextUser();
+    void loadInTestUser();
     bool ready;
     bool isActive;
     bool loading;
     script currentScript;
+    
+private:
+    int calmTimer;
     
 };
 

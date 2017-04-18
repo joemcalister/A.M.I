@@ -24,7 +24,42 @@ json networking::test()
     
     curl = curl_easy_init();
     if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://api.joemcalister.com/ami/file.txt");
+        curl_easy_setopt(curl, CURLOPT_URL, "https://api.joemcalister.com/ami/testscript2.txt"); //https://api.joemcalister.com/ami/testscript2.txt
+        // allow redirection
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+        // write function allows parse to string
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        
+        // make request
+        res = curl_easy_perform(curl);
+        
+        // error check
+        if(res != CURLE_OK)
+        {
+            cout << "ERROR: curl failed with: " << curl_easy_strerror(res) << endl;
+        }
+        
+        // clean up
+        curl_easy_cleanup(curl);
+        
+        // parse as json
+        return json::parse(readBuffer);
+        
+    }
+    
+    return nil;
+}
+
+json networking::fetch()
+{
+    CURL *curl;
+    CURLcode res;
+    std::string readBuffer;
+    
+    curl = curl_easy_init();
+    if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, "https://api.joemcalister.com/ami/queue/check/getNextUser.php");
         // allow redirection
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         // write function allows parse to string

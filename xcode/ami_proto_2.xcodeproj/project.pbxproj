@@ -27,6 +27,12 @@
 		D82288991E4F5D2A008B11F7 /* script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82288971E4F5D2A008B11F7 /* script.cpp */; };
 		D822889D1E4F5F27008B11F7 /* script_object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D822889B1E4F5F27008B11F7 /* script_object.cpp */; };
 		D84ECCE31E5092CF008A2E98 /* queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D84ECCE11E5092CF008A2E98 /* queue.cpp */; };
+		D84ECCEC1E50AB18008A2E98 /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D84ECCE71E50AB18008A2E98 /* fft.cpp */; };
+		D84ECCED1E50AB18008A2E98 /* fftOctaveAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D84ECCE91E50AB18008A2E98 /* fftOctaveAnalyzer.cpp */; };
+		D8854AE31E563114001D4DEC /* voice_vis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8854AE11E563114001D4DEC /* voice_vis.cpp */; };
+		D893E8471EA52FE1006B637B /* particleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D893E8451EA52FE1006B637B /* particleSystem.cpp */; };
+		D893E84A1EA52FF6006B637B /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D893E8481EA52FF6006B637B /* Particle.cpp */; };
+		D8A076CF1E718F19009737E6 /* script_image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8A076CD1E718F19009737E6 /* script_image.cpp */; };
 		D8AC040B1E4F563300E46D08 /* networking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8AC04091E4F563300E46D08 /* networking.cpp */; };
 /* End PBXBuildFile section */
 
@@ -52,22 +58,25 @@
 		8D1107320486CEB800E47090 /* ami_proto_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ami_proto_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9753D38F05F44B63896082A1 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		CDDDAD5873B0455BBB506707 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
-		D8100E401E4FAD2800F310F2 /* pa_asio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pa_asio.h; sourceTree = "<group>"; };
-		D8100E411E4FAD2800F310F2 /* pa_jack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pa_jack.h; sourceTree = "<group>"; };
-		D8100E421E4FAD2800F310F2 /* pa_linux_alsa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pa_linux_alsa.h; sourceTree = "<group>"; };
-		D8100E431E4FAD2800F310F2 /* pa_mac_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pa_mac_core.h; sourceTree = "<group>"; };
-		D8100E441E4FAD2800F310F2 /* pa_win_ds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pa_win_ds.h; sourceTree = "<group>"; };
-		D8100E451E4FAD2800F310F2 /* pa_win_wasapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pa_win_wasapi.h; sourceTree = "<group>"; };
-		D8100E461E4FAD2800F310F2 /* pa_win_waveformat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pa_win_waveformat.h; sourceTree = "<group>"; };
-		D8100E471E4FAD2800F310F2 /* pa_win_wdmks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pa_win_wdmks.h; sourceTree = "<group>"; };
-		D8100E481E4FAD2800F310F2 /* pa_win_wmme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pa_win_wmme.h; sourceTree = "<group>"; };
-		D8100E491E4FAD2800F310F2 /* portaudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = portaudio.h; sourceTree = "<group>"; };
 		D82288971E4F5D2A008B11F7 /* script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = script.cpp; sourceTree = "<group>"; };
 		D82288981E4F5D2A008B11F7 /* script.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = script.hpp; sourceTree = "<group>"; };
 		D822889B1E4F5F27008B11F7 /* script_object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = script_object.cpp; sourceTree = "<group>"; };
 		D822889C1E4F5F27008B11F7 /* script_object.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = script_object.hpp; sourceTree = "<group>"; };
 		D84ECCE11E5092CF008A2E98 /* queue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = queue.cpp; sourceTree = "<group>"; };
 		D84ECCE21E5092CF008A2E98 /* queue.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = queue.hpp; sourceTree = "<group>"; };
+		D84ECCE71E50AB18008A2E98 /* fft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft.cpp; sourceTree = "<group>"; };
+		D84ECCE81E50AB18008A2E98 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
+		D84ECCE91E50AB18008A2E98 /* fftOctaveAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fftOctaveAnalyzer.cpp; sourceTree = "<group>"; };
+		D84ECCEA1E50AB18008A2E98 /* fftOctaveAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftOctaveAnalyzer.h; sourceTree = "<group>"; };
+		D84ECCEB1E50AB18008A2E98 /* FFTOctaveAnalysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFTOctaveAnalysis.h; sourceTree = "<group>"; };
+		D8854AE11E563114001D4DEC /* voice_vis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = voice_vis.cpp; sourceTree = "<group>"; };
+		D8854AE21E563114001D4DEC /* voice_vis.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = voice_vis.hpp; sourceTree = "<group>"; };
+		D893E8451EA52FE1006B637B /* particleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particleSystem.cpp; sourceTree = "<group>"; };
+		D893E8461EA52FE1006B637B /* particleSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = particleSystem.hpp; sourceTree = "<group>"; };
+		D893E8481EA52FF6006B637B /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
+		D893E8491EA52FF6006B637B /* Particle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Particle.hpp; sourceTree = "<group>"; };
+		D8A076CD1E718F19009737E6 /* script_image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = script_image.cpp; sourceTree = "<group>"; };
+		D8A076CE1E718F19009737E6 /* script_image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = script_image.hpp; sourceTree = "<group>"; };
 		D8AC04091E4F563300E46D08 /* networking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = networking.cpp; sourceTree = "<group>"; };
 		D8AC040A1E4F563300E46D08 /* networking.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = networking.hpp; sourceTree = "<group>"; };
 		D8AC040D1E4F596300E46D08 /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
@@ -101,6 +110,7 @@
 		01B97315FEAEA392516A2CEA /* Blocks */ = {
 			isa = PBXGroup;
 			children = (
+				D84ECCE41E50AB18008A2E98 /* FFTOctaveAnalysis */,
 				A1D55C72BB3F4BBE92FF031D /* Cinder-Warping */,
 			);
 			name = Blocks;
@@ -109,9 +119,10 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				D84ECCE01E5092BE008A2E98 /* queue */,
-				D8100E3F1E4FAD1A00F310F2 /* portAudio */,
 				F19F187A4B024EE49F99329A /* ami_proto_2App.cpp */,
+				D893E8441EA52FBA006B637B /* particles */,
+				D8854AE01E5630E3001D4DEC /* voice_visualization */,
+				D84ECCE01E5092BE008A2E98 /* queue */,
 				D822889A1E4F5F0F008B11F7 /* script_object */,
 				D82288961E4F5D1D008B11F7 /* script */,
 				D82288951E4F5D10008B11F7 /* networking */,
@@ -223,23 +234,6 @@
 			name = include;
 			sourceTree = "<group>";
 		};
-		D8100E3F1E4FAD1A00F310F2 /* portAudio */ = {
-			isa = PBXGroup;
-			children = (
-				D8100E401E4FAD2800F310F2 /* pa_asio.h */,
-				D8100E411E4FAD2800F310F2 /* pa_jack.h */,
-				D8100E421E4FAD2800F310F2 /* pa_linux_alsa.h */,
-				D8100E431E4FAD2800F310F2 /* pa_mac_core.h */,
-				D8100E441E4FAD2800F310F2 /* pa_win_ds.h */,
-				D8100E451E4FAD2800F310F2 /* pa_win_wasapi.h */,
-				D8100E461E4FAD2800F310F2 /* pa_win_waveformat.h */,
-				D8100E471E4FAD2800F310F2 /* pa_win_wdmks.h */,
-				D8100E481E4FAD2800F310F2 /* pa_win_wmme.h */,
-				D8100E491E4FAD2800F310F2 /* portaudio.h */,
-			);
-			name = portAudio;
-			sourceTree = "<group>";
-		};
 		D82288951E4F5D10008B11F7 /* networking */ = {
 			isa = PBXGroup;
 			children = (
@@ -263,6 +257,8 @@
 			children = (
 				D822889C1E4F5F27008B11F7 /* script_object.hpp */,
 				D822889B1E4F5F27008B11F7 /* script_object.cpp */,
+				D8A076CD1E718F19009737E6 /* script_image.cpp */,
+				D8A076CE1E718F19009737E6 /* script_image.hpp */,
 			);
 			name = script_object;
 			sourceTree = "<group>";
@@ -274,6 +270,54 @@
 				D84ECCE11E5092CF008A2E98 /* queue.cpp */,
 			);
 			name = queue;
+			sourceTree = "<group>";
+		};
+		D84ECCE41E50AB18008A2E98 /* FFTOctaveAnalysis */ = {
+			isa = PBXGroup;
+			children = (
+				D84ECCE51E50AB18008A2E98 /* src */,
+			);
+			path = FFTOctaveAnalysis;
+			sourceTree = "<group>";
+		};
+		D84ECCE51E50AB18008A2E98 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				D84ECCE61E50AB18008A2E98 /* fft */,
+				D84ECCEB1E50AB18008A2E98 /* FFTOctaveAnalysis.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		D84ECCE61E50AB18008A2E98 /* fft */ = {
+			isa = PBXGroup;
+			children = (
+				D84ECCE71E50AB18008A2E98 /* fft.cpp */,
+				D84ECCE81E50AB18008A2E98 /* fft.h */,
+				D84ECCE91E50AB18008A2E98 /* fftOctaveAnalyzer.cpp */,
+				D84ECCEA1E50AB18008A2E98 /* fftOctaveAnalyzer.h */,
+			);
+			path = fft;
+			sourceTree = "<group>";
+		};
+		D8854AE01E5630E3001D4DEC /* voice_visualization */ = {
+			isa = PBXGroup;
+			children = (
+				D8854AE21E563114001D4DEC /* voice_vis.hpp */,
+				D8854AE11E563114001D4DEC /* voice_vis.cpp */,
+			);
+			name = voice_visualization;
+			sourceTree = "<group>";
+		};
+		D893E8441EA52FBA006B637B /* particles */ = {
+			isa = PBXGroup;
+			children = (
+				D893E8451EA52FE1006B637B /* particleSystem.cpp */,
+				D893E8461EA52FE1006B637B /* particleSystem.hpp */,
+				D893E8481EA52FF6006B637B /* Particle.cpp */,
+				D893E8491EA52FF6006B637B /* Particle.hpp */,
+			);
+			name = particles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -340,12 +384,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				D82288991E4F5D2A008B11F7 /* script.cpp in Sources */,
+				D893E84A1EA52FF6006B637B /* Particle.cpp in Sources */,
 				A8FC23C20C1A4CE7AF12BE8B /* ami_proto_2App.cpp in Sources */,
+				D84ECCEC1E50AB18008A2E98 /* fft.cpp in Sources */,
 				2114F783B791421BAF263FCE /* Warp.cpp in Sources */,
+				D893E8471EA52FE1006B637B /* particleSystem.cpp in Sources */,
 				6D63A06F6DB24AB18DFB2789 /* WarpBilinear.cpp in Sources */,
 				0E9CBB5A093742CAA87460FF /* WarpPerspective.cpp in Sources */,
 				D84ECCE31E5092CF008A2E98 /* queue.cpp in Sources */,
 				D822889D1E4F5F27008B11F7 /* script_object.cpp in Sources */,
+				D8A076CF1E718F19009737E6 /* script_image.cpp in Sources */,
+				D84ECCED1E50AB18008A2E98 /* fftOctaveAnalyzer.cpp in Sources */,
+				D8854AE31E563114001D4DEC /* voice_vis.cpp in Sources */,
 				C57F0BEE84BC4CDEB9901483 /* WarpPerspectiveBilinear.cpp in Sources */,
 				D8AC040B1E4F563300E46D08 /* networking.cpp in Sources */,
 			);
@@ -402,7 +452,10 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
+				OTHER_LDFLAGS = (
+					"\"$(CINDER_PATH)/lib/libcinder.a\"",
+					"-lcurl",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.libcinder.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = ami_proto_2;
 				STRIP_INSTALLED_PRODUCT = YES;

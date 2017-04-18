@@ -23,14 +23,47 @@ void queue::endShow()
 
 void queue::loadInNextUser()
 {
-    // set loading flag
-    loading = true;
-    
-    // load in the next user -- this should search in future
-    currentScript = script();
-    
-    // set loading flag to false
-    ready = true;
-    loading = false;
+    // calm timer prevents constant calling of this function
+    if (calmTimer % (60*5) == 0)
+    {
+        calmTimer = 0;
+        cout << "Looking to load the next user..." << endl;
+        
+        // check if there is currently a user
+        loading = true;
+        
+        // load in the next user -- this should search in future
+        currentScript = script(false);
+        
+        if (currentScript.success)
+        {
+            // it was okay!
+            ready = true;
+            loading = false;
+        }else {
+            // we didnt find anything
+            loading = false;
+        }
+        
+        
+    }
+    calmTimer++;
 }
 
+void queue::loadInTestUser()
+{
+    // calm timer prevents constant calling of this function
+    // load in the next user -- this should search in future
+    currentScript = script(true);
+    
+    if (currentScript.success)
+    {
+        // it was okay!
+        ready = true;
+        loading = false;
+    }else {
+        // we didnt find anything
+        loading = false;
+    }
+
+}

@@ -10,6 +10,7 @@
 #define script_hpp
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "networking.hpp"
 #include "script_object.hpp"
 #include "Resources.h"
@@ -20,11 +21,12 @@ using json = nlohmann::json;
 class script
 {
 public:
+    script(bool test);
     script();
     script(string url);
     json json;
     vector<script_object> lines;
-    bool ready, begun;
+    bool ready, begun, success;
     float start_time, current_time;
     int current_index;
     script_object current_line;
