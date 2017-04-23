@@ -14,6 +14,7 @@
 #include "cinder/Rand.h"
 #include "cinder/audio/Voice.h"
 #include "cinder/Rand.h"
+#include "cinder/qtime/QuickTimeGl.h"
 
 #include "Warp.h"
 #include "queue.hpp"
@@ -47,19 +48,32 @@ public:
 	void updateWindowTitle();
     int randInRange(int min, int max);
     
+    
 private:
 	fs::path mSettings;
 	gl::TextureRef stensil, stensil_large, rawbacking, shadowOverlay, spotlight, calibrate, imageOverlay;
+    vector <gl::TextureRef> personal_snippets;
 	WarpList mWarps;
 	Area mSrcArea;
     audio::VoiceRef mainSound, backgroundSound, backingSound, startingSound, blipSound;
     queue q;
     voiceVisualization voiceVis;
     bool switchedOn, switchedTest;
-    int randomIndex, randomTimer;
+    int randomIndex, randomTimer, randomIndexImage;
+    
+    ci::Area getPositionForImage(ci::Area image, ci::Area brain);
     
     // the particle system for stars, just one to reduce cpu load
     ParticleSystem mParticleSystem;
+    
+
+    // video
+    void loadMovieFile( const fs::path &path );
+    
+    gl::TextureRef			mFrameTexture;
+    qtime::MovieGlRef		mMovie;
+    vector <script_object>  movie_script_references;
+
 };
 
 void ami_proto_2App::prepare(Settings *settings)
@@ -67,12 +81,29 @@ void ami_proto_2App::prepare(Settings *settings)
 	settings->setWindowSize(1440, 900);
 }
 
+// load our movie
+void ami_proto_2App::loadMovieFile( const fs::path &moviePath )
+{
+    try {
+        // load up the movie, set it to loop, and begin playing
+        mMovie = qtime::MovieGl::create( moviePath );
+        mMovie->setLoop();
+        mMovie->setVolume(0.0);
+        //mMovie->play();
+    }
+    catch( ci::Exception &exc ) {
+        console() << "Exception caught trying to load the movie from path: " << moviePath << ", what: " << exc.what() << std::endl;
+        mMovie.reset();
+    }
+    
+    mFrameTexture.reset();
+}
+
 void ami_proto_2App::setup()
 {
 	updateWindowTitle();
     
-    
-    
+    // fill particles for stars
     int numParticle = 100;
     for( int i=0; i<numParticle; i++ ){
         float x = ci::randFloat( 0.0f, 500 );
@@ -84,8 +115,6 @@ void ami_proto_2App::setup()
         ( cinder::vec2( x, y ), radius, mass, drag );
         mParticleSystem.addParticle( particle );
     }
-    
-    
     
     // allow uncapped framerate
 	disableFrameRate();
@@ -132,6 +161,15 @@ void ami_proto_2App::setup()
                                         gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
         
 		mSrcArea = stensil->getBounds();
+        
+        // load in the personal snippets
+        for (int i=1; i<18; i++)
+        {
+            std::ostringstream filename;
+            filename << "sneak-" << i << ".png";
+            personal_snippets.push_back(gl::Texture::create(loadImage(loadAsset(filename.str())),
+                                                            gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR)));
+        }
 
 		// adjust the content size of the warps
 		Warp::setSize(mWarps, stensil->getSize());
@@ -181,6 +219,25 @@ void ami_proto_2App::update()
         q.currentScript.current_line = q.currentScript.lines[0];
         q.currentScript.current_line.local_start_time = ci::app::getElapsedSeconds();
         
+        // load in the video clips
+        for (script_object &line:q.currentScript.lines)
+        {
+            // this is a line
+            if (line.is_video)
+            {
+                // this line has a video create a reference
+                movie_script_references.push_back(line);
+            }
+        }
+        
+        // if there are any videos let's cue up the first
+        if (movie_script_references.size() > 0)
+        {
+            cout << "pre-loading the first video" << endl;
+            loadMovieFile(movie_script_references[0].movie_src);
+            movie_script_references.erase(movie_script_references.begin());
+        }
+        
         // check the current sound scenario
         if (q.currentScript.current_line.sound_src.length() != 0)
         {
@@ -201,7 +258,7 @@ void ami_proto_2App::update()
         }
         
         // we need to start the backing sound
-        audio::SourceFileRef sourceFile = audio::load(loadFile("/Users/joe/Desktop/ami_buffer_files/protected/Intro-beta-2_mixdown.wav"));
+        audio::SourceFileRef sourceFile = audio::load(loadFile("/Users/joe/Desktop/ami_buffer_files/protected/Intro-beta-4_mixdown.wav"));
         backingSound = audio::Voice::create(sourceFile);
         backingSound->start();
         
@@ -216,6 +273,40 @@ void ami_proto_2App::update()
     {
         // itterate time
         q.currentScript.current_time = ci::app::getElapsedSeconds() - q.currentScript.start_time;
+        
+        // check if video should be updated
+        if (q.currentScript.current_line.is_video && mMovie)
+        {
+            // update movie texture
+            cout << "Updating movie texture" << endl;
+            
+            // also check its actually playing
+            if (!mMovie->isPlaying())
+            {
+                mMovie->play();
+            }
+            
+            // update texture
+            mFrameTexture = mMovie->getTexture();
+            
+        }else {
+            // check for overflowing videos
+            if (mMovie && mMovie->isPlaying())
+            {
+                mMovie->stop();
+                mMovie = nil;
+                mFrameTexture.reset();
+                
+                // potentially pre-load the next one
+                if (movie_script_references.size() > 0)
+                {
+                    cout << "pre-loading another video" << endl;
+                    loadMovieFile(movie_script_references[0].movie_src);
+                    movie_script_references.erase(movie_script_references.begin());
+                }
+            }
+
+        }
         
         // determine if should proceed to next timeline chunk
         if (q.currentScript.current_line.end_time < q.currentScript.current_time)
@@ -238,6 +329,15 @@ void ami_proto_2App::update()
                 q.currentScript.current_index++;
                 q.currentScript.current_line = q.currentScript.lines[q.currentScript.current_index];
                 q.currentScript.current_line.local_start_time = ci::app::getElapsedSeconds();
+                
+                // pre load in the new video
+                /*
+                if (q.currentScript.current_line.is_video)
+                {
+                    cout << "Pre loading a video called "<< q.currentScript.current_line.movie_src << endl;
+                    loadMovieFile(q.currentScript.current_line.movie_src);
+                }
+                 */
                 
                 // load in the potential sound
                 if (q.currentScript.current_line.sound_src.length() != 0)
@@ -291,21 +391,26 @@ void ami_proto_2App::draw()
                 warp->begin();
                 
                 // if this current line has an image do it :D -- easy!
-                if (q.currentScript.current_line.images.size() > index)
+                if (q.currentScript.current_line.images.size() > index && !q.currentScript.current_line.is_video)
                 {
                     if (q.currentScript.current_line.images[index].image != nil && (ci::app::getElapsedSeconds() - q.currentScript.current_line.local_start_time) > q.currentScript.current_line.images[index].show_delay)
                     {
                         // should draw
-                        gl::draw(q.currentScript.current_line.images[index].image, q.currentScript.current_line.images[index].image->getBounds(), warp->getBounds());
+                        gl::draw(q.currentScript.current_line.images[index].image, q.currentScript.current_line.images[index].image->getBounds(), getPositionForImage(q.currentScript.current_line.images[index].image->getBounds(), warp->getBounds()));
                         
                         // draw the overlay to blend the image in
                         gl::draw(imageOverlay, imageOverlay->getBounds(), warp->getBounds());
-                    }else {
                         
+                    }else {
                         // should be plain space
                         gl::draw(rawbacking, rawbacking->getBounds(), warp->getBounds());
                     }
                     
+                }else if (q.currentScript.current_line.is_video) {
+                    // draw our video
+                    if( mFrameTexture) {
+                        gl::draw( mFrameTexture, getPositionForImage(mFrameTexture->getBounds(), warp->getBounds()) );
+                    }
                 }else {
                     // shouldnt draw -- no texture for this brain index
                     gl::draw(rawbacking, rawbacking->getBounds(), warp->getBounds());
@@ -350,10 +455,8 @@ void ami_proto_2App::draw()
                     {
                         audio::SourceFileRef sourceFile = audio::load(loadFile("/Users/joe/Desktop/ami_buffer_files/protected/intro_blob.wav"));
                         blipSound = audio::Voice::create(sourceFile);
-                        
                     }
-                    
-                    
+
                     // determine the index required
                     int past_seconds = ci::app::getElapsedSeconds();
                     if ((past_seconds % 2 == 0) && (randomTimer != past_seconds))
@@ -363,6 +466,14 @@ void ami_proto_2App::draw()
                         while (last == randomIndex)
                         {
                             randomIndex = rand() % 7;
+                        }
+                        
+                        // random index for the image
+                        int last_img = randomIndexImage;
+                        while (last_img == randomIndexImage)
+                        {
+                            
+                            randomIndexImage = rand() % personal_snippets.size();
                         }
                         
                         // play the blip sound!
@@ -376,6 +487,21 @@ void ami_proto_2App::draw()
 
                         // draw stensil
                         gl::draw(rawbacking, rawbacking->getBounds(), warp->getBounds());
+                        
+                        // should draw
+                        gl::draw(personal_snippets[randomIndexImage], personal_snippets[randomIndexImage]->getBounds(), getPositionForImage(personal_snippets[randomIndexImage]->getBounds(), warp->getBounds()));
+                        
+                        /*
+                        if( mFrameTexture ) {
+                            Rectf centeredRect = Rectf( mFrameTexture->getBounds() ).getCenteredFit( warp->getBounds(), true );
+                            gl::draw( mFrameTexture, centeredRect );
+                        }
+                         */
+                        
+                        // draw the overlay to blend the image in
+                        gl::draw(imageOverlay, imageOverlay->getBounds(), warp->getBounds());
+                        
+                        // draw the shadow overlay over
                         gl::draw(shadowOverlay, shadowOverlay->getBounds(), warp->getBounds());
                         
                         // draw the particles
@@ -389,6 +515,7 @@ void ami_proto_2App::draw()
                             // draw the large brain stensil
                             gl::draw(stensil_large, mSrcArea, warp->getBounds());
                         }else {
+                            
                             // stretch image to fit the area with warp->get bounds
                             gl::draw(stensil, mSrcArea, warp->getBounds());
                         }
@@ -399,21 +526,25 @@ void ami_proto_2App::draw()
                 }else {
                     // not switched on
                     // begin warp
-                    warp->begin();
                     
-                    // draw visulisation
-                    gl::draw(calibrate, calibrate->getBounds(), warp->getBounds());
-                    if (index == 4)
+                    if (!q.isActive)
                     {
-                        // draw the large brain stensil
-                        gl::draw(stensil_large, mSrcArea, warp->getBounds());
-                    }else {
-                        // stretch image to fit the area with warp->get bounds
-                        gl::draw(stensil, mSrcArea, warp->getBounds());
+                        warp->begin();
+                        
+                        // draw visulisation
+                        gl::draw(calibrate, calibrate->getBounds(), warp->getBounds());
+                        if (index == 4)
+                        {
+                            // draw the large brain stensil
+                            gl::draw(stensil_large, mSrcArea, warp->getBounds());
+                        }else {
+                            // stretch image to fit the area with warp->get bounds
+                            gl::draw(stensil, mSrcArea, warp->getBounds());
+                        }
+                        
+                        // end warp
+                        warp->end();
                     }
-                    
-                    // end warp
-                    warp->end();
                     
                 }
             }
@@ -422,6 +553,44 @@ void ami_proto_2App::draw()
             index++;
         }
     }
+}
+
+ci::Area ami_proto_2App::getPositionForImage(ci::Area image, ci::Area brain)
+{
+    // check if portrait or square
+    if ((image.getHeight() > image.getWidth())||(image.getHeight() == image.getWidth()))
+    {
+        float imageHeight = image.getHeight();
+        float imageWidth = image.getWidth();
+        float scale = brain.getWidth()/imageWidth;
+        imageHeight = imageHeight * scale;
+        
+        // check if height is now larger than brain, if so center
+        float y = 0;
+        if (imageHeight > brain.getHeight())
+        {
+            // it's larger
+            y = (brain.getHeight()-imageHeight)/2;
+        }else {
+            // place in the center
+            y = (brain.getHeight()-imageHeight)/2;
+        }
+        
+        return ci::Area(0,y,brain.getWidth(), imageHeight);
+        
+    }else {
+        // it's landscape
+        float imageHeight = image.getHeight();
+        float imageWidth = image.getWidth();
+        float scale = brain.getHeight()/imageHeight;
+        imageWidth = imageWidth * scale;
+        
+        // check if width is now larger than brain, if so center
+        float x = (brain.getWidth()-imageWidth)/2;
+        
+        return ci::Area(x,0,imageWidth, brain.getHeight());
+    }
+ 
 }
 
 int ami_proto_2App::randInRange(int min, int max)

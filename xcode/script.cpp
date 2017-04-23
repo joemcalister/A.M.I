@@ -45,6 +45,8 @@ script::script(bool test)
             s.image = nil;
             s.image_src = "";
             s.background_sound_src = "";
+            s.is_video = false;
+            s.movie_src = "";
             
             // look for isolation
             string isolate = dict["isolate"];
@@ -62,65 +64,98 @@ script::script(bool test)
                 s.isolate_all = false;
             }
             
-            // download the image locally
-            int cIndex = 0;
-            for(auto brain:dict["objects"])
+            // download the image locally if no video takeover
+            if (dict["is_video"] == "true")
             {
-                // check if includes resource
-                if (brain["resource"] != "")
+                // video takeover
+                cout << "video take over!" << endl;
+                s.is_video = true;
+                s.movie_src = dict["video_path"];
+                
+            }else {
+                int cIndex = 0;
+                for(auto brain:dict["objects"])
                 {
-                    cout << "adding an image " << brain["resource"] << endl;
-                    
-                    // this is unfortunatly essential, as ocasionally a link may be delivered that wont read properly
-                    try {
-                        string url = brain["resource"];
-                        std::ostringstream oss;
-                        oss << BUFFER_FILES_PATH << random() << "-image.jpg";
-                        std::string var = oss.str();
+                    // check if includes resource
+                    if (brain["resource"] != "")
+                    {
+                        cout << "adding an image " << brain["resource"] << endl;
                         
-                        cinder::BufferRef myData = loadStreamBuffer(cinder::loadUrlStream(url));
-                        myData->write(cinder::writeFile(oss.str()));
-                        
+                        // this is unfortunatly essential, as ocasionally a link may be delivered that wont read properly
+                        try {
+                            string url = brain["resource"];
+                            std::ostringstream oss;
+                            oss << BUFFER_FILES_PATH << random() << "-image.jpg";
+                            std::string var = oss.str();
+                            
+                            cinder::BufferRef myData = loadStreamBuffer(cinder::loadUrlStream(url));
+                            myData->write(cinder::writeFile(oss.str()));
+                            
 #warning maybe a memory leak here ^
-                        cinder::gl::TextureRef img = cinder::gl::Texture::create(loadImage(cinder::loadFile(oss.str())), cinder::gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
+                            cinder::gl::TextureRef img = cinder::gl::Texture::create(loadImage(cinder::loadFile(oss.str())), cinder::gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
+                            
+                            
+                            // create script image object
+                            script_image si;
+                            si.image = img;
+                            si.show_delay = brain["delay"];
+                            
+                            // push back the image object
+                            s.images.push_back(si);
+                        } catch (const std::overflow_error& e) {
+                            // this executes if f() throws std::overflow_error (same type rule)
+                            cinder::gl::TextureRef img = cinder::gl::Texture::create(loadImage(cinder::loadFile("/Users/joe/Desktop/ami_buffer_files/protected/sad-mac.gif")), cinder::gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
+                            
+                            // create script image object
+                            script_image si;
+                            si.image = img;
+                            si.show_delay = brain["delay"];
+                        } catch (const std::runtime_error& e) {
+                            // this executes if f() throws std::underflow_error (base class rule)
+                            cinder::gl::TextureRef img = cinder::gl::Texture::create(loadImage(cinder::loadFile("/Users/joe/Desktop/ami_buffer_files/protected/sad-mac.gif")), cinder::gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
+                            
+                            // create script image object
+                            script_image si;
+                            si.image = img;
+                            si.show_delay = brain["delay"];
+                        } catch (const std::exception& e) {
+                            // this executes if f() throws std::logic_error (base class rule)
+                            cinder::gl::TextureRef img = cinder::gl::Texture::create(loadImage(cinder::loadFile("/Users/joe/Desktop/ami_buffer_files/protected/sad-mac.gif")), cinder::gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
+                            
+                            // create script image object
+                            script_image si;
+                            si.image = img;
+                            si.show_delay = brain["delay"];
+                        } catch (...) {
+                            // this executes if f() throws std::string or int or any other unrelated type
+                            cinder::gl::TextureRef img = cinder::gl::Texture::create(loadImage(cinder::loadFile("/Users/joe/Desktop/ami_buffer_files/protected/sad-mac.gif")), cinder::gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
+                            
+                            // create script image object
+                            script_image si;
+                            si.image = img;
+                            si.show_delay = brain["delay"];
+                        }
                         
-                        
-                        // create script image object
+                    }else {
                         script_image si;
-                        si.image = img;
-                        si.show_delay = brain["delay"];
+                        si.image = nil;
+                        si.show_delay = 0;
                         
                         // push back the image object
                         s.images.push_back(si);
-                    } catch (const std::overflow_error& e) {
-                        // this executes if f() throws std::overflow_error (same type rule)
-                    } catch (const std::runtime_error& e) {
-                        // this executes if f() throws std::underflow_error (base class rule)
-                    } catch (const std::exception& e) {
-                        // this executes if f() throws std::logic_error (base class rule)
-                    } catch (...) {
-                        // this executes if f() throws std::string or int or any other unrelated type
                     }
                     
-                }else {
-                    script_image si;
-                    si.image = nil;
-                    si.show_delay = 0;
+                    // check for spotlight
+                    if (brain["spotlight"] == "true")
+                    {
+                        // there is a spotlight
+                        s.has_spotlight = true;
+                        s.spotlight_index = cIndex;
+                    }
                     
-                    // push back the image object
-                    s.images.push_back(si);
+                    // itterate cindex
+                    cIndex++;
                 }
-                
-                // check for spotlight
-                if (brain["spotlight"] == "true")
-                {
-                    // there is a spotlight
-                    s.has_spotlight = true;
-                    s.spotlight_index = cIndex;
-                }
-                
-                // itterate cindex
-                cIndex++;
             }
                
             // fix the sound by downloading it locally
