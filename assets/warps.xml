@@ -3,10 +3,10 @@
 	<profile name="default">
 		<map id="1" display="1">
 			<warp method="bilinear" width="2" height="2" brightness="1" resolution="16" linear="0" adaptive="1">
-				<controlpoint x="0.21041666" y="0.771111131"/>
-				<controlpoint x="0.21041666" y="0.968888879"/>
-				<controlpoint x="0.375694454" y="0.774444461"/>
-				<controlpoint x="0.38055557" y="0.975555539"/>
+				<controlpoint x="0.407291681" y="0.812962949"/>
+				<controlpoint x="0.411458343" y="1.00555551"/>
+				<controlpoint x="0.572916687" y="0.826851845"/>
+				<controlpoint x="0.563020825" y="1.01851857"/>
 				<blend exponent="2">
 					<edges left="0" top="0" right="0" bottom="0"/>
 					<gamma red="1" green="1" blue="1"/>
@@ -16,10 +16,10 @@
 		</map>
 		<map id="2" display="1">
 			<warp method="bilinear" width="2" height="2" brightness="1" resolution="16" linear="0" adaptive="1">
-				<controlpoint x="0.197916672" y="0.0922222212"/>
-				<controlpoint x="0.197916672" y="0.305555552"/>
-				<controlpoint x="0.378472209" y="0.0844444409"/>
-				<controlpoint x="0.381249994" y="0.303333342"/>
+				<controlpoint x="0.280729175" y="0.0796296299"/>
+				<controlpoint x="0.258854181" y="0.283333331"/>
+				<controlpoint x="0.426562488" y="0.11203704"/>
+				<controlpoint x="0.423437506" y="0.297222227"/>
 				<blend exponent="2">
 					<edges left="0" top="0" right="0" bottom="0"/>
 					<gamma red="1" green="1" blue="1"/>
@@ -29,10 +29,10 @@
 		</map>
 		<map id="3" display="1">
 			<warp method="bilinear" width="2" height="2" brightness="1" resolution="16" linear="0" adaptive="1">
-				<controlpoint x="0.0611111112" y="0.425555557"/>
-				<controlpoint x="0.0625" y="0.641111135"/>
-				<controlpoint x="0.239583328" y="0.417777777"/>
-				<controlpoint x="0.24166666" y="0.635555565"/>
+				<controlpoint x="0.269791663" y="0.467592597"/>
+				<controlpoint x="0.271354169" y="0.666666687"/>
+				<controlpoint x="0.409895837" y="0.499074072"/>
+				<controlpoint x="0.415104181" y="0.67592591"/>
 				<blend exponent="2">
 					<edges left="0" top="0" right="0" bottom="0"/>
 					<gamma red="1" green="1" blue="1"/>
@@ -42,10 +42,10 @@
 		</map>
 		<map id="4" display="1">
 			<warp method="bilinear" width="2" height="2" brightness="1" resolution="16" linear="0" adaptive="1">
-				<controlpoint x="0.585416675" y="0.763333321"/>
-				<controlpoint x="0.586805582" y="0.972222209"/>
-				<controlpoint x="0.756250024" y="0.765555561"/>
-				<controlpoint x="0.77013886" y="0.975555539"/>
+				<controlpoint x="0.641145825" y="0.65925926"/>
+				<controlpoint x="0.630208313" y="0.851851881"/>
+				<controlpoint x="0.787500024" y="0.657407403"/>
+				<controlpoint x="0.783333361" y="0.853703678"/>
 				<blend exponent="2">
 					<edges left="0" top="0" right="0" bottom="0"/>
 					<gamma red="1" green="1" blue="1"/>
@@ -55,10 +55,10 @@
 		</map>
 		<map id="5" display="1">
 			<warp method="bilinear" width="2" height="2" brightness="1" resolution="16" linear="0" adaptive="1">
-				<controlpoint x="0.311805546" y="0.343333334"/>
-				<controlpoint x="0.302777767" y="0.75999999"/>
-				<controlpoint x="0.595138907" y="0.343333334"/>
-				<controlpoint x="0.612500012" y="0.76222223"/>
+				<controlpoint x="0.414583325" y="0.355555564"/>
+				<controlpoint x="0.407812506" y="0.607407391"/>
+				<controlpoint x="0.639062524" y="0.382407397"/>
+				<controlpoint x="0.623437524" y="0.644444466"/>
 				<blend exponent="2">
 					<edges left="0" top="0" right="0" bottom="0"/>
 					<gamma red="1" green="1" blue="1"/>
@@ -68,10 +68,10 @@
 		</map>
 		<map id="6" display="1">
 			<warp method="bilinear" width="2" height="2" brightness="1" resolution="16" linear="0" adaptive="1">
-				<controlpoint x="0.575694442" y="0.0900000036"/>
-				<controlpoint x="0.581944466" y="0.304444432"/>
-				<controlpoint x="0.765277803" y="0.0766666681"/>
-				<controlpoint x="0.77013886" y="0.297777772"/>
+				<controlpoint x="0.461458325" y="0.00092592591"/>
+				<controlpoint x="0.464583337" y="0.198148146"/>
+				<controlpoint x="0.622916639" y="0.0287037045"/>
+				<controlpoint x="0.614062488" y="0.231481478"/>
 				<blend exponent="2">
 					<edges left="0" top="0" right="0" bottom="0"/>
 					<gamma red="1" green="1" blue="1"/>
@@ -81,10 +81,10 @@
 		</map>
 		<map id="7" display="1">
 			<warp method="bilinear" width="2" height="2" brightness="1" resolution="16" linear="0" adaptive="1">
-				<controlpoint x="0.644444466" y="0.411111116"/>
-				<controlpoint x="0.654166639" y="0.626666665"/>
-				<controlpoint x="0.830555558" y="0.401111126"/>
-				<controlpoint x="0.843055546" y="0.641111135"/>
+				<controlpoint x="0.652083337" y="0.216666669"/>
+				<controlpoint x="0.646354139" y="0.410185188"/>
+				<controlpoint x="0.823958337" y="0.243518516"/>
+				<controlpoint x="0.798958361" y="0.442592591"/>
 				<blend exponent="2">
 					<edges left="0" top="0" right="0" bottom="0"/>
 					<gamma red="1" green="1" blue="1"/>

@@ -60,6 +60,7 @@ private:
     voiceVisualization voiceVis;
     bool switchedOn, switchedTest;
     int randomIndex, randomTimer, randomIndexImage;
+    string vidPath;
     
     ci::Area getPositionForImage(ci::Area image, ci::Area brain);
     
@@ -78,7 +79,10 @@ private:
 
 void ami_proto_2App::prepare(Settings *settings)
 {
-	settings->setWindowSize(1440, 900);
+	settings->setWindowSize(1920, 1080);
+    settings->setDisplay( ci::Display::getDisplays()[0] ); //for the secondary monitor
+    settings->setBorderless();
+    //settings->setAlwaysOnTop();
 }
 
 // load our movie
@@ -139,7 +143,7 @@ void ami_proto_2App::setup()
 	// load test image
 	try {
         
-        stensil = gl::Texture::create(loadImage(loadAsset("brain-stensil-small.png")),
+        stensil = gl::Texture::create(loadImage(loadAsset("brain-stensil-small-blur.png")),
                                       gl::Texture2d::Format().loadTopDown().mipmap(true).minFilter( GL_LINEAR_MIPMAP_LINEAR));
         
 		stensil_large = gl::Texture::create(loadImage(loadAsset("brain-stensil-large.png")),
@@ -163,7 +167,7 @@ void ami_proto_2App::setup()
 		mSrcArea = stensil->getBounds();
         
         // load in the personal snippets
-        for (int i=1; i<18; i++)
+        for (int i=1; i<17; i++)
         {
             std::ostringstream filename;
             filename << "sneak-" << i << ".png";
@@ -235,7 +239,11 @@ void ami_proto_2App::update()
         {
             cout << "pre-loading the first video" << endl;
             loadMovieFile(movie_script_references[0].movie_src);
+            vidPath = movie_script_references[0].movie_src;
             movie_script_references.erase(movie_script_references.begin());
+            
+            // update the first frame
+            mFrameTexture = mMovie->getTexture();
         }
         
         // check the current sound scenario
@@ -260,6 +268,7 @@ void ami_proto_2App::update()
         // we need to start the backing sound
         audio::SourceFileRef sourceFile = audio::load(loadFile("/Users/joe/Desktop/ami_buffer_files/protected/Intro-beta-4_mixdown.wav"));
         backingSound = audio::Voice::create(sourceFile);
+        backingSound->setVolume(0.85);
         backingSound->start();
         
         // note the start
@@ -275,21 +284,9 @@ void ami_proto_2App::update()
         q.currentScript.current_time = ci::app::getElapsedSeconds() - q.currentScript.start_time;
         
         // check if video should be updated
-        if (q.currentScript.current_line.is_video && mMovie)
+        if (q.currentScript.current_line.movie_src != vidPath && q.currentScript.current_line.is_video)
         {
-            // update movie texture
-            cout << "Updating movie texture" << endl;
-            
-            // also check its actually playing
-            if (!mMovie->isPlaying())
-            {
-                mMovie->play();
-            }
-            
-            // update texture
-            mFrameTexture = mMovie->getTexture();
-            
-        }else {
+            cout << "out of date video, is " << vidPath << " should be " << q.currentScript.current_line.movie_src << endl;
             // check for overflowing videos
             if (mMovie && mMovie->isPlaying())
             {
@@ -302,11 +299,54 @@ void ami_proto_2App::update()
                 {
                     cout << "pre-loading another video" << endl;
                     loadMovieFile(movie_script_references[0].movie_src);
+                    vidPath = movie_script_references[0].movie_src;
                     movie_script_references.erase(movie_script_references.begin());
+                    
+                    // update the first frame
+                    mFrameTexture = mMovie->getTexture();
                 }
             }
-
+        }else {
+            
+            if (q.currentScript.current_line.is_video && mMovie)
+            {
+                // update movie texture
+                cout << "Updating movie texture" << endl;
+                
+                // also check its actually playing
+                if (!mMovie->isPlaying())
+                {
+                    mMovie->play();
+                }
+                
+                // update texture
+                mFrameTexture = mMovie->getTexture();
+                
+            }else {
+                // check for overflowing videos
+                if (mMovie && mMovie->isPlaying())
+                {
+                    mMovie->stop();
+                    mMovie = nil;
+                    mFrameTexture.reset();
+                    
+                    // potentially pre-load the next one
+                    if (movie_script_references.size() > 0)
+                    {
+                        cout << "pre-loading another video" << endl;
+                        loadMovieFile(movie_script_references[0].movie_src);
+                        vidPath = movie_script_references[0].movie_src;
+                        movie_script_references.erase(movie_script_references.begin());
+                        
+                        // update the first frame
+                        mFrameTexture = mMovie->getTexture();
+                    }
+                }
+                
+            }
         }
+        
+        
         
         // determine if should proceed to next timeline chunk
         if (q.currentScript.current_line.end_time < q.currentScript.current_time)
